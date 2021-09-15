@@ -5,9 +5,10 @@
 //  Created by Swapnil Bhalerao on 14/09/21.
 //  clang++ -std=c++14 -stdlib=libc++ main.cpp
 //  Question : Sum List
-//  i/p: (7->1->6) + (5->9->2) that is, 617+295 = 912
-//  o/p: 2->1->9
+//  i/p: (6->1->7) + (2->9->5) that is, 617+295 = 912
+//  o/p: 9->1->2
 #include <iostream>
+#include <vector>
 using namespace std;
 struct Node
 {
@@ -132,11 +133,16 @@ void LinkedList::AppendNode(int num)
 }
 void LinkedList::createLinkList(int num)
 {
+    std::vector<int> vec;
     while (num != 0)
     {
-        int val = num % 10;
+        int data = num % 10;
         num = num / 10;
-        AppendNode(val);
+        vec.push_back(data);
+    }
+    for (int i = vec.size() - 1; i >= 0; i--)
+    {
+        AppendNode(vec[i]);
     }
 }
 void LinkedList::deleteLinkList()
