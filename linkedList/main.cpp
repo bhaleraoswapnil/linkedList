@@ -4,7 +4,7 @@
 //
 //  Created by Swapnil Bhalerao on 14/09/21.
 //  clang++ -std=c++14 -stdlib=libc++ main.cpp
-//  Question : Remove duplicate from unsored Linked List
+//  Question : Return Kth to last element
 #include <iostream>
 #include <unordered_set>
 using namespace std;
@@ -28,7 +28,7 @@ public:
     void createLinkList();
     void deleteLinkList();
     void printLL();
-    void removeDuplicate();
+    Node *ReturnKthElement(int);
 };
 LinkedList::LinkedList() : head(nullptr), tail(nullptr)
 {
@@ -37,35 +37,26 @@ LinkedList::~LinkedList()
 {
     deleteLinkList();
 }
-void LinkedList::removeDuplicate()
+Node *LinkedList::ReturnKthElement(int pos)
 {
-    if (head == nullptr || head->next == nullptr)
+    int len = 0;
+    Node *p = head;
+    while (p != nullptr)
     {
-        return;
+        len++;
+        p = p->next;
     }
-    std::unordered_set<int> s;
-    Node *fast = head;
-    Node *pre = head;
-    s.insert(fast->data);
-    fast = fast->next;
-    while (fast != nullptr)
+    if (pos > len)
     {
-        std::unordered_set<int>::iterator it = s.find(fast->data);
-        if (it == s.end()) // element not found
-        {
-            s.insert(fast->data);
-            fast = fast->next;
-            pre = pre->next;
-        }
-        else
-        {
-            Node *temp = fast->next;
-            pre->next = temp;
-            fast->next = nullptr;
-            delete fast;
-            fast = temp;
-        }
+        cout << "Invalid position - returned head pointer" << endl;
+        return head;
     }
+    p = head;
+    for (int i = 0; i < len - pos; i++)
+    {
+        p = p->next;
+    }
+    return p;
 }
 void LinkedList::printLL()
 {
@@ -80,12 +71,15 @@ void LinkedList::printLL()
 }
 void LinkedList::createLinkList()
 {
+    int num = 0;
+    cout << "Enter Linked List length\n";
+    cin >> num;
     int val = 0;
     cout << "Enter data\n";
     cin >> val;
     head = new Node(val);
     tail = head;
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < num - 1; i++)
     {
         cout << "Enter data\n";
         cin >> val;
@@ -120,9 +114,19 @@ int main(int argc, const char *argv[])
     LinkedList list;
     list.createLinkList();
     list.printLL();
-    cout << "\nRemoved Duplicate elements\n";
-    list.removeDuplicate();
-    list.printLL();
+    cout << "Enter Kth element\n";
+    int pos = 0;
+    cin >> pos;
+    cout << pos << "th Element => ";
+    Node *ret = list.ReturnKthElement(pos);
+    if (ret != nullptr)
+    {
+        cout << ret->data << endl;
+    }
+    else
+    {
+        cout << "WARNING - NULL POINTER" << endl;
+    }
     list.deleteLinkList();
     return 0;
 }
