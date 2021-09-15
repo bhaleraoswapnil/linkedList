@@ -4,7 +4,9 @@
 //
 //  Created by Swapnil Bhalerao on 14/09/21.
 //  clang++ -std=c++14 -stdlib=libc++ main.cpp
-//  Question : Return Kth to last element
+//  Question : Delete given Node in Singly Linked List
+//  i/p: 1->2->3->4->5 & given node 3.
+//  o/p: 1->2->4->5
 #include <iostream>
 #include <unordered_set>
 using namespace std;
@@ -28,7 +30,8 @@ public:
     void createLinkList();
     void deleteLinkList();
     void printLL();
-    Node *ReturnKthElement(int);
+    void DeleteGivenNode(Node *);
+    Node *ReturnNode(int);
 };
 LinkedList::LinkedList() : head(nullptr), tail(nullptr)
 {
@@ -37,26 +40,40 @@ LinkedList::~LinkedList()
 {
     deleteLinkList();
 }
-Node *LinkedList::ReturnKthElement(int pos)
+Node *LinkedList::ReturnNode(int pos)
 {
-    int len = 0;
     Node *p = head;
+    int len = 0;
     while (p != nullptr)
     {
         len++;
         p = p->next;
     }
-    if (pos > len)
+    if (pos >= len || pos <= 0)
     {
-        cout << "Invalid position - returned head pointer" << endl;
-        return head;
+        return nullptr;
     }
-    p = head;
-    for (int i = 0; i < len - pos; i++)
+    else
     {
+        p = head;
+        for (int i = 0; i < pos - 1; i++)
+        {
+            p = p->next;
+        }
+        return p;
+    }
+}
+void LinkedList::DeleteGivenNode(Node *p)
+{
+    Node *r = p;
+    while (p->next != nullptr)
+    {
+        p->data = p->next->data;
+        r = p;
         p = p->next;
     }
-    return p;
+    r->next = nullptr;
+    delete p;
 }
 void LinkedList::printLL()
 {
@@ -114,19 +131,19 @@ int main(int argc, const char *argv[])
     LinkedList list;
     list.createLinkList();
     list.printLL();
-    cout << "Enter Kth element\n";
     int pos = 0;
+    cout << "Enter node position" << endl;
     cin >> pos;
-    cout << pos << "th Element => ";
-    Node *ret = list.ReturnKthElement(pos);
-    if (ret != nullptr)
+    Node *p = list.ReturnNode(pos);
+    if (p != nullptr)
     {
-        cout << ret->data << endl;
+        list.DeleteGivenNode(p);
     }
     else
     {
-        cout << "WARNING - NULL POINTER" << endl;
+        cout << "Invalid Node position\n";
     }
+    list.printLL();
     list.deleteLinkList();
     return 0;
 }
