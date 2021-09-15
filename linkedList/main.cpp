@@ -70,23 +70,22 @@ void LinkedList::removeDuplicate()
 void LinkedList::printLL()
 {
     Node *p = head;
-    cout << "\nLinked List => ";
+    cout << "Linked List => ";
     while (p != nullptr)
     {
-        cout << p->data << " ";
+        cout << p->data << " -> ";
         p = p->next;
     }
-    cout << endl;
+    cout << "NULL" << endl;
 }
 void LinkedList::createLinkList()
 {
-    cout << "Creating LinkedList with 5 nodes\n";
     int val = 0;
     cout << "Enter data\n";
     cin >> val;
     head = new Node(val);
     tail = head;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 2; i++)
     {
         cout << "Enter data\n";
         cin >> val;
@@ -94,14 +93,6 @@ void LinkedList::createLinkList()
         tail->next = temp;
         tail = temp;
     }
-
-    Node *p = head;
-    while (p != nullptr)
-    {
-        cout << p->data << " ";
-        p = p->next;
-    }
-    cout << endl;
 }
 void LinkedList::deleteLinkList()
 {
@@ -121,10 +112,6 @@ void LinkedList::deleteLinkList()
         }
         head = nullptr;
     }
-    else
-    {
-        cout << "Empty LinkList\n";
-    }
 }
 
 int main(int argc, const char *argv[])
@@ -133,6 +120,7 @@ int main(int argc, const char *argv[])
     LinkedList list;
     list.createLinkList();
     list.printLL();
+    cout << "\nRemoved Duplicate elements\n";
     list.removeDuplicate();
     list.printLL();
     list.deleteLinkList();
