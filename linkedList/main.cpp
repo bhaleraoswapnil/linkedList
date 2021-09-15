@@ -4,10 +4,10 @@
 //
 //  Created by Swapnil Bhalerao on 14/09/21.
 //  clang++ -std=c++14 -stdlib=libc++ main.cpp
-//  Question : Sum List
-//  i/p: (7->1->6) + (5->9->2) that is, 617+295 = 912
-//  o/p: 2->1->9
+//  Question : Palindrome - Write function to check linked list is palindrome or not.
+
 #include <iostream>
+#include <stack>
 using namespace std;
 struct Node
 {
@@ -26,13 +26,10 @@ private:
 public:
     LinkedList();
     ~LinkedList();
+    void createLinkList();
     void deleteLinkList();
     void printLL();
-    void createLinkList(int);
-    void AppendNode(int);
-    void sumList(Node *, Node *);
-    void copyLinkedList(Node *);
-    Node *getHeadPtr() { return head; }
+    bool checkPalindrome();
 };
 LinkedList::LinkedList() : head(nullptr), tail(nullptr)
 {
@@ -40,6 +37,37 @@ LinkedList::LinkedList() : head(nullptr), tail(nullptr)
 LinkedList::~LinkedList()
 {
     deleteLinkList();
+}
+bool LinkedList::checkPalindrome()
+{
+    // 1-2-3-3-2-1 ==> fast = null EVEN
+    //s=1,f=1 st=1 |    s=2 f=3 st= 2,1    |    s=3 f=2 st=3 2 1    |    s=3 f=null break loop
+    // 1-2-3-4-3-2-1 ==> fast->next=null ODD
+    // s=1,f=1 st=1==> s=2,f=3 st=2 1 ==> s=3,f=3 st= 3 2 1 ==> s=4,f=1 st=f->next=null break loop
+    std::stack<int> st;
+    Node *slow = head;
+    Node *fast = head;
+    while (fast != nullptr && fast->next != nullptr)
+    {
+        st.push(slow->data);
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    if (fast != nullptr && fast->next == nullptr)
+    {
+        slow = slow->next;
+    }
+    while (!st.empty())
+    {
+        if (st.top() != slow->data)
+        {
+            return false;
+        }
+        st.pop();
+        slow = slow->next;
+    }
+    return true;
 }
 void LinkedList::printLL()
 {
@@ -52,91 +80,23 @@ void LinkedList::printLL()
     }
     cout << "NULL" << endl;
 }
-void LinkedList::copyLinkedList(Node *p)
+void LinkedList::createLinkList()
 {
-    if (nullptr != p)
+    int num = 0;
+    cout << "Enter Linked List length\n";
+    cin >> num;
+    int val = 0;
+    cout << "Enter data\n";
+    cin >> val;
+    head = new Node(val);
+    tail = head;
+    for (int i = 0; i < num - 1; i++)
     {
-        while (p != nullptr)
-        {
-            AppendNode(p->data);
-            p = p->next;
-        }
-    }
-    else
-    {
-        cout << "NULL pointer head" << endl;
-    }
-}
-void LinkedList::sumList(Node *p1, Node *p2)
-{
-    if (p1 == nullptr && p2 == nullptr)
-    {
-        cout << "Invalid Lisked Lists" << endl;
-    }
-    else if (p1 == nullptr)
-    {
-        copyLinkedList(p2);
-        cout << "same as p2 Linked List" << endl;
-    }
-    else if (p2 == nullptr)
-    {
-        copyLinkedList(p1);
-        cout << "same as p1 Linked List" << endl;
-    }
-    else
-    {
-        int carry = 0;
-        int val = 0;
-        while (p1 != nullptr || p2 != nullptr)
-        {
-            if (p1 != nullptr && p2 != nullptr)
-            {
-                val = p1->data + p2->data + carry;
-                p1 = p1->next;
-                p2 = p2->next;
-            }
-            else if (p1 != nullptr)
-            {
-                val = p1->data + carry;
-                p1 = p1->next;
-            }
-            else
-            {
-                val = p2->data + carry;
-                p2 = p2->next;
-            }
-            carry = val / 10;
-            val = val % 10;
-            AppendNode(val);
-        }
-        if (carry)
-        {
-            AppendNode(carry);
-        }
-    }
-}
-void LinkedList::AppendNode(int num)
-{
-    if (head == nullptr)
-    {
-        head = new Node(num);
-        tail = head;
-        return;
-    }
-    else
-    {
-        Node *p = new Node(num);
-        tail->next = p;
-        tail = tail->next;
-    }
-}
-void LinkedList::createLinkList(int num)
-{
-    while (num != 0)
-    {
-        int val = num % 10;
-        num = num / 10;
-        AppendNode(val);
+        cout << "Enter data\n";
+        cin >> val;
+        Node *temp = new Node(val);
+        tail->next = temp;
+        tail = temp;
     }
 }
 void LinkedList::deleteLinkList()
@@ -147,7 +107,7 @@ void LinkedList::deleteLinkList()
         Node *temp2 = head->next;
         while (temp1 != nullptr)
         {
-            // cout << "deleting node: " << temp1->data << "\n";
+            cout << "deleting node: " << temp1->data << "\n";
             delete temp1;
             temp1 = temp2;
             if (temp2 != nullptr)
@@ -162,22 +122,16 @@ void LinkedList::deleteLinkList()
 int main(int argc, const char *argv[])
 {
     // insert code here...
-    LinkedList L1;
-    cout << "Enter 1st number" << endl;
-    int num = 0;
-    cin >> num;
-    L1.createLinkList(num);
-    L1.printLL();
-
-    LinkedList L2;
-    cout << "Enter 2st number" << endl;
-    cin >> num;
-    L2.createLinkList(num);
-    L2.printLL();
-
-    LinkedList L3;
-    L3.sumList(L1.getHeadPtr(), L2.getHeadPtr());
-    cout << "\n\n";
-    L3.printLL();
+    LinkedList list;
+    list.createLinkList();
+    list.printLL();
+    if (list.checkPalindrome())
+    {
+        cout << "Linked list is Palindrome" << endl;
+    }
+    else
+    {
+        cout << "Linked list is Not Palindrome" << endl;
+    }
     return 0;
 }
