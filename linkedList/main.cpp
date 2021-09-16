@@ -4,9 +4,7 @@
 //
 //  Created by Swapnil Bhalerao on 14/09/21.
 //  clang++ -std=c++14 -stdlib=libc++ main.cpp
-//  Question : Loop Detection - Return loop in node form Linked List.
-//  i/p : A -> B -> C -> D -> E -> C
-//  o/p : C
+//  Question : Loop Detect in Linked List and correct it.
 
 #include <iostream>
 using namespace std;
@@ -40,14 +38,16 @@ LinkedList::~LinkedList()
 void LinkedList::detectLoop()
 {
     Node *ptr = head;
-
+    Node *q = head;
     while (ptr != nullptr)
     {
         if (true == ptr->flag)
         {
             cout << "Loop Detected at " << ptr->data << endl;
+            q->next = nullptr;
             return;
         }
+        q = ptr;
         ptr->flag = true;
         ptr = ptr->next;
     }
@@ -103,6 +103,7 @@ int main(int argc, const char *argv[])
     list.createLinkList();
     list.printLL();
     list.detectLoop();
+    list.printLL();
 
     return 0;
 }
